@@ -1,4 +1,4 @@
-module Home.WebGLHelper
+module WebGLHelper
 
 open Fable.Core.JsInterop
 open Fable.Import
@@ -87,7 +87,7 @@ let createSpriteTextureBuffer gl =
                     0.; 0. |] gl
 
 let clear (gl:GL) width height =
-    gl.clearColor(0., 0., 0., 1.);
+    gl.clearColor(0.3, 0., 0., 1.);
 
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     //gl.enable(gl.DEPTH_TEST);
