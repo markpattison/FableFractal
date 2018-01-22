@@ -9,7 +9,7 @@ open Fable.Import
 open App.Types
 open App.State
 
-importAll "../sass/main.sass"
+importAll "./sass/main.sass"
 
 open Fable.Helpers.React
 open Fable.Helpers.React.Props

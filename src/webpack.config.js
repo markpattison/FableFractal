@@ -22,14 +22,14 @@ console.log("Bundling for " + (isProduction ? "production" : "development") + ".
 
 module.exports = {
     devtool: isProduction ? undefined : "source-map",
-    entry: resolve('./src/FableFractal.fsproj'),
+    entry: resolve('./FableFractal.fsproj'),
     output: {
         filename: 'bundle.js',
         path: resolve('./public'),
     },
     resolve: {
         modules: [
-            "node_modules", resolve("./node_modules/")
+            "node_modules", resolve("../node_modules/")
         ]
     },
     devServer: {

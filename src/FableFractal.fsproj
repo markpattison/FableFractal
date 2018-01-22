@@ -4,11 +4,18 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <None Include="sass\main.sass" />
+    <None Include="webpack.config.js" />
     <Compile Include="WebGLHelper.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="FractalRenderer.fs" />
     <Compile Include="State.fs" />
     <Compile Include="App.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="public\img\favicon-16x16.png" />
+    <Content Include="public\img\favicon-32x32.png" />
+    <Content Include="public\index.html" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
