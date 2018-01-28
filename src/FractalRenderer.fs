@@ -7,6 +7,43 @@ open WebGLHelper
 open App.Types
 open Fable.Core
 
+let myVertex = """
+    attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColour;
+
+    varying lowp vec4 vColour;
+
+    void main() {
+      gl_Position = aVertexPosition;
+      vColour = aVertexColour;
+    }
+"""
+
+let myFragment = """
+    varying lowp vec4 vColour;
+
+    void main(void) {
+        gl_FragColor = vColour;
+    }
+"""
+
+let initBuffers gl =
+    let positions =
+        createBuffer
+            [|
+                 0.5; -0.7;
+                 0.0;  0.7;
+                -0.5; -0.7
+            |] gl
+    let colours =
+        createBuffer
+            [|
+                1.0;  0.0; 0.0; 1.0;
+                0.0;  1.0; 0.0; 1.0;
+                0.0;  0.0; 1.0; 1.0
+            |] gl
+    positions, colours
+
 let create (holder : Browser.Element) =
 
     let canvas = Browser.document.createElement_canvas()
@@ -20,19 +57,7 @@ let create (holder : Browser.Element) =
 
     holder.appendChild(canvas) |> ignore
 
-    let context : Browser.WebGLRenderingContext = 
-      // Helper to get the webgl context
-      let getContext ctxString =
-        canvas.getContext(ctxString, createObj [ "premultipliedAlpha" ==> false ]) |> unbox<Browser.WebGLRenderingContext>
-
-      let webgl = getContext "webgl"
-  
-      // If we have wegl = null in JS then try to get experimental-wegl
-      // Edge and webkit use experimental-webgl
-      if not (unbox webgl) then
-        getContext "experimental-webgl"
-      else // Else give back the context
-        webgl
+    let context = getWebGLContext canvas
 
     let program = createShaderProgram context myVertex myFragment
 
@@ -55,7 +80,7 @@ let create (holder : Browser.Element) =
     let imageLoadCanvas = Browser.document.createElement_canvas()
     let imageLoadCanvasContext = imageLoadCanvas.getContext_2d()
 
-    let created = DateTime.Now;
+    let created = DateTime.Now
     let mutable last = DateTime.Now
 
     let render model =
@@ -65,7 +90,7 @@ let create (holder : Browser.Element) =
 
             let resolution = canvas.width, canvas.height
 
-            clear (fst resolution) (snd resolution)
+            clear resolution
 
             draw()
 
