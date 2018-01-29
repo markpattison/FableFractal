@@ -35,6 +35,10 @@ let createShaderProgram (gl:GL) vertex fragment =
 
     program
 
+let createUniformLocation (gl:GL) program name =
+    let uniformLocation = gl.getUniformLocation(program, name)
+    uniformLocation
+
 let createAttributeLocation (gl : GL) program name =
     let attributeLocation = gl.getAttribLocation(program, name)
     gl.enableVertexAttribArray(attributeLocation)
