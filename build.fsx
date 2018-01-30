@@ -11,7 +11,7 @@ open Fake.NpmHelper
 let fableDirectory = "src"
 let fableReference = !! (fableDirectory + "/*.fsproj") |> Seq.exactlyOne
 
-let dotnetcliVersion = "2.1.3"
+let dotnetcliVersion = "2.1.4"
 let mutable dotnetExePath = "dotnet"
 
 // Targets
