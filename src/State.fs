@@ -13,10 +13,15 @@ let renderCommand =
     Cmd.ofSub sub
 
 let init result =
-  { Now = System.DateTime.Now }, renderCommand
+    {
+        Zoom = 0.314
+        OffsetX = -0.5
+        OffsetY = 0.0
+        Now = System.DateTime.Now
+    }, renderCommand
 
 let update renderer msg model =
-  match msg with
-  | Render ->
-    renderer model
-    { model with Now = System.DateTime.Now }, renderCommand
+    match msg with
+    | Render ->
+        renderer model
+        { model with Now = System.DateTime.Now }, renderCommand

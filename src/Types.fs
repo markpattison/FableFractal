@@ -5,5 +5,8 @@ type Msg =
 
 type Model =
     {
+        Zoom: float
+        OffsetX: float
+        OffsetY: float
         Now: System.DateTime
     }

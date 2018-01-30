@@ -144,7 +144,7 @@ let create (holder : Browser.Element) =
     let zoomUniform = createUniformLocation context program "uZoom"
     let offsetUniform = createUniformLocation context program "uOffset"
 
-    let draw widthOverHeight =
+    let draw widthOverHeight zoom x y =
         context.useProgram(program)
 
         context.bindBuffer(context.ARRAY_BUFFER, positionBuffer)
@@ -153,8 +153,8 @@ let create (holder : Browser.Element) =
         context.vertexAttribPointer(textureCoordAttribute, 2.0, context.FLOAT, false, 0.0, 0.0)
 
         context.uniform1f(widthOverHeightUniform, widthOverHeight)
-        context.uniform1f(zoomUniform, 0.314)
-        context.uniform2f(offsetUniform, -0.5, 0.0)
+        context.uniform1f(zoomUniform, zoom)
+        context.uniform2f(offsetUniform, x, y)
 
         context.drawArrays (context.TRIANGLE_STRIP, 0., 4.0)
 
@@ -177,7 +177,7 @@ let create (holder : Browser.Element) =
             let widthOverHeight = if canvas.height = 0.0 then 1.0 else canvas.width / canvas.height
             clear resolution
 
-            draw widthOverHeight
+            draw widthOverHeight model.Zoom model.OffsetX model.OffsetY
 
         | _ -> ignore()
     
