@@ -165,7 +165,6 @@ let create (holder : Browser.Element) =
     let imageLoadCanvas = Browser.document.createElement_canvas()
     let imageLoadCanvasContext = imageLoadCanvas.getContext_2d()
 
-    let created = DateTime.Now
     let mutable last = DateTime.Now
 
     let render model =

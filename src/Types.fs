@@ -1,7 +1,13 @@
 module App.Types
 
 type Msg =
-    | Render
+    | UpMsg
+    | LeftMsg
+    | RightMsg
+    | DownMsg
+    | ZoomInMsg
+    | ZoomOutMsg
+    | RenderMsg
 
 type Model =
     {
