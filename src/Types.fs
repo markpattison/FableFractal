@@ -1,5 +1,7 @@
 module App.Types
 
+open Fable.Import
+
 type Msg =
     | UpMsg
     | LeftMsg
@@ -7,6 +9,7 @@ type Msg =
     | DownMsg
     | ZoomInMsg
     | ZoomOutMsg
+    | WheelMsg of React.WheelEvent
     | RenderMsg
 
 type Model =
@@ -15,4 +18,5 @@ type Model =
         OffsetX: float
         OffsetY: float
         Now: System.DateTime
+        Render: (Model -> unit) option
     }

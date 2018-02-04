@@ -56,24 +56,26 @@ let controls dispatch =
         ]
 
 let root model dispatch =
-    div []
+    div [ OnWheel (fun we -> (WheelMsg we) |> dispatch) ]
         [
             model.Now.ToString() |> str
             controls dispatch
+            div [ Id "Fractal" ] []
         ]
 
 open Elmish.React
 open Elmish.Debug
 open Elmish.HMR
 
-let renderer = FractalRenderer.create (Browser.document.getElementById("Fractal"))
+//let renderer = FractalRenderer.create (Browser.document.getElementById("Fractal"))
 
-Program.mkProgram init (update renderer) root
+Program.mkProgram init update root
+
 #if DEBUG
 //|> Program.withDebugger
 |> Program.withHMR
 #endif
-|> Program.withReact "Hud"
+|> Program.withReact "FableFractal"
 |> Program.run
 
 

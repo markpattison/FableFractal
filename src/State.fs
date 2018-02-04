@@ -18,9 +18,10 @@ let init result =
         OffsetX = -0.5
         OffsetY = 0.0
         Now = System.DateTime.Now
+        Render = None
     }, renderCommand
 
-let update renderer msg model =
+let update msg model =
     match msg with
     | Msg.UpMsg -> { model with OffsetY = model.OffsetY + 0.1 / model.Zoom }, []
     | DownMsg -> { model with OffsetY = model.OffsetY - 0.1 / model.Zoom }, []
@@ -28,6 +29,16 @@ let update renderer msg model =
     | RightMsg -> { model with OffsetX = model.OffsetX + 0.1 / model.Zoom }, []
     | ZoomInMsg -> { model with Zoom = model.Zoom * 1.1 }, []
     | ZoomOutMsg -> { model with Zoom = model.Zoom / 1.1 }, []
+    | WheelMsg we -> { model with Zoom = model.Zoom * 0.99 ** we.deltaY }, []
     | RenderMsg ->
-        renderer model
-        { model with Now = System.DateTime.Now }, renderCommand
+        match model.Render with
+        | None ->
+            let holder = Browser.document.getElementById("Fractal")
+            match holder with
+            | null -> model, renderCommand
+            | h ->
+                let renderer = FractalRenderer.create h
+                { model with Render = Some renderer }, renderCommand
+        | Some render ->
+            render model
+            { model with Now = System.DateTime.Now }, renderCommand
