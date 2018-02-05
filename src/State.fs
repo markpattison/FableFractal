@@ -14,22 +14,37 @@ let renderCommand =
 
 let init result =
     {
+        CanvasHeight = 1.0
         Zoom = 0.314
         OffsetX = -0.5
         OffsetY = 0.0
         Now = System.DateTime.Now
         Render = None
+        Scrolling = false
+        LastScreenX = 0.0
+        LastScreenY = 0.0
     }, renderCommand
 
 let update msg model =
     match msg with
-    | Msg.UpMsg -> { model with OffsetY = model.OffsetY + 0.1 / model.Zoom }, []
-    | DownMsg -> { model with OffsetY = model.OffsetY - 0.1 / model.Zoom }, []
-    | LeftMsg -> { model with OffsetX = model.OffsetX - 0.1 / model.Zoom }, []
-    | RightMsg -> { model with OffsetX = model.OffsetX + 0.1 / model.Zoom }, []
-    | ZoomInMsg -> { model with Zoom = model.Zoom * 1.1 }, []
-    | ZoomOutMsg -> { model with Zoom = model.Zoom / 1.1 }, []
     | WheelMsg we -> { model with Zoom = model.Zoom * 0.99 ** we.deltaY }, []
+    | MouseDownMsg me ->
+        { model with
+            Scrolling = true
+            LastScreenX = me.screenX
+            LastScreenY = me.screenY
+        }, []
+    | MouseUpMsg _ | MouseLeaveMsg _ -> { model with Scrolling = false }, []
+    | MouseMoveMsg me ->
+        if model.Scrolling then
+            { model with
+                OffsetX = model.OffsetX - (me.screenX - model.LastScreenX) / (model.Zoom * model.CanvasHeight)
+                OffsetY = model.OffsetY + (me.screenY - model.LastScreenY) / (model.Zoom * model.CanvasHeight)
+                LastScreenX = me.screenX
+                LastScreenY = me.screenY
+            }, []
+        else
+            model, []
     | RenderMsg ->
         match model.Render with
         | None ->
@@ -37,8 +52,8 @@ let update msg model =
             match holder with
             | null -> model, renderCommand
             | h ->
-                let renderer = FractalRenderer.create h
-                { model with Render = Some renderer }, renderCommand
+                let renderer, height = FractalRenderer.create h
+                { model with Render = Some renderer; CanvasHeight = float height }, renderCommand
         | Some render ->
             render model
             { model with Now = System.DateTime.Now }, renderCommand

@@ -180,4 +180,4 @@ let create (holder : Browser.Element) =
 
         | _ -> ignore()
     
-    render
+    render, height

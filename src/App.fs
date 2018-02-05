@@ -14,54 +14,20 @@ importAll "./sass/main.sass"
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 
-let iconButton iconName action dispatch =
-    let x = span [ ClassName "icon" ] [ i [ ClassName iconName ] [] ]
-    let y = [  ]
-    div []
-        [
-            a
-                [ ClassName "button"; OnClick (fun _ -> action |> dispatch) ]
-                [ span [ ClassName "icon" ] [ i [ ClassName iconName ] [] ] ]
-        ]
-
-let controls dispatch =
-    div []
-        [
-            table []
-                [
-                    tbody []
-                        [
-                            tr []
-                                [
-                                    td [] []
-                                    td [] [ iconButton "fa fa-arrow-circle-up" UpMsg dispatch ]
-                                    td [] []
-                                    td [] [ iconButton "fa fa-search-plus" ZoomInMsg dispatch ]
-                                ]
-                            tr []
-                                [
-                                    td [] [ iconButton "fa fa-arrow-circle-left" LeftMsg dispatch ]
-                                    td [] []
-                                    td [] [ iconButton "fa fa-arrow-circle-right" RightMsg dispatch ]
-                                ]
-                            tr []
-                                [
-                                    td [] []
-                                    td [] [ iconButton "fa fa-arrow-circle-down" DownMsg dispatch ]
-                                    td [] []
-                                    td [] [ iconButton "fa fa-search-minus" ZoomOutMsg dispatch ]
-                                ]
-                        ]
-                ]
-        ]
-
 let root model dispatch =
-    div [ OnWheel (fun we -> (WheelMsg we) |> dispatch) ]
-        [
-            model.Now.ToString() |> str
-            controls dispatch
-            div [ Id "Fractal" ] []
-        ]
+    div [] [
+        p [] [ sprintf "X = %.6f" model.OffsetX |> str ]
+        p [] [ sprintf "Y = %.6f" model.OffsetY |> str ]
+        p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
+        div [
+            Id "Fractal"
+            OnWheel (fun we -> (WheelMsg we) |> dispatch)
+            OnMouseDown (fun me -> (MouseDownMsg me) |> dispatch)
+            OnMouseUp (fun me -> (MouseUpMsg me) |> dispatch)
+            OnMouseMove (fun me -> (MouseMoveMsg me) |> dispatch)
+            OnMouseLeave (fun me -> (MouseLeaveMsg me) |> dispatch)
+        ] []
+    ]
 
 open Elmish.React
 open Elmish.Debug
