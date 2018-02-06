@@ -3,12 +3,17 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="JS\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="paket.references" />
     <None Include="sass\main.sass" />
+    <None Include="webpack.config.js" />
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
     <Content Include="public\img\favicon-16x16.png" />
     <Content Include="public\img\favicon-32x32.png" />
     <Content Include="public\index.html" />
-    <None Include="webpack.config.js" />
     <Compile Include="WebGLHelper.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="FractalRenderer.fs" />

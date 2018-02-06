@@ -3,8 +3,18 @@ module App.State
 open Elmish
 open Elmish.Browser.Navigation
 open Elmish.Browser.UrlParser
+open Fable.Core
+open Fable.Core.JsInterop
 open Fable.Import
 open Types
+
+type INormalizedWheel =
+    abstract member pixelX: float
+    abstract member pixelY: float
+    abstract member spinX: float
+    abstract member spinY: float
+
+let normalizeWheel : React.WheelEvent -> INormalizedWheel = importDefault "normalize-wheel"
 
 let renderCommand =
     let sub dispatch =
@@ -27,7 +37,9 @@ let init result =
 
 let update msg model =
     match msg with
-    | WheelMsg we -> { model with Zoom = model.Zoom * 0.99 ** we.deltaY }, []
+    | WheelMsg we ->
+        let zoom = (normalizeWheel we).pixelY / 100.0
+        { model with Zoom = model.Zoom * 0.99 ** zoom }, []
     | MouseDownMsg me ->
         { model with
             Scrolling = true
