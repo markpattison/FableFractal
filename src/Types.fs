@@ -13,6 +13,11 @@ type Msg =
     | TouchMoveMsg of React.TouchEvent
     | RenderMsg
 
+type Transform =
+    | Scrolling of float * float
+    | Pinching of float
+    | NoTransform
+
 type Model =
     {
         CanvasHeight: float
@@ -21,7 +26,5 @@ type Model =
         OffsetY: float
         Now: System.DateTime
         Render: (Model -> unit) option
-        Scrolling: bool
-        LastScreenX: float
-        LastScreenY: float
+        Transform: Transform
     }

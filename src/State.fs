@@ -30,9 +30,7 @@ let init result =
         OffsetY = 0.0
         Now = System.DateTime.Now
         Render = None
-        Scrolling = false
-        LastScreenX = 0.0
-        LastScreenY = 0.0
+        Transform = NoTransform
     }, renderCommand
 
 let update msg model =
@@ -42,37 +40,49 @@ let update msg model =
         { model with Zoom = model.Zoom * 0.99 ** zoom }, []
     | MouseDownMsg me ->
         { model with
-            Scrolling = true
-            LastScreenX = me.screenX
-            LastScreenY = me.screenY
+            Transform = Scrolling (me.screenX, me.screenY)
         }, []
-    | MouseUpMsg _ | MouseLeaveMsg _ | TouchEndMsg _ -> { model with Scrolling = false }, []
+    | MouseUpMsg _ | MouseLeaveMsg _ | TouchEndMsg _ -> { model with Transform = NoTransform }, []
     | MouseMoveMsg me ->
-        if model.Scrolling then
+        match model.Transform with
+        | Scrolling (lastScreenX, lastScreenY) ->
             { model with
-                OffsetX = model.OffsetX - (me.screenX - model.LastScreenX) / (model.Zoom * model.CanvasHeight)
-                OffsetY = model.OffsetY + (me.screenY - model.LastScreenY) / (model.Zoom * model.CanvasHeight)
-                LastScreenX = me.screenX
-                LastScreenY = me.screenY
+                OffsetX = model.OffsetX - (me.screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
+                OffsetY = model.OffsetY + (me.screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
+                Transform = Scrolling (me.screenX, me.screenY)
             }, []
-        else
-            model, []
+        | _ -> model, []
     | TouchStartMsg te ->
-        { model with
-            Scrolling = true
-            LastScreenX = te.touches.[0.0].clientX
-            LastScreenY = te.touches.[0.0].clientY
-        }, []
-    | TouchMoveMsg te ->
-        if model.Scrolling then
+        match te.touches.length with
+        | 1.0 ->
             { model with
-                OffsetX = model.OffsetX - (te.touches.[0.0].screenX - model.LastScreenX) / (model.Zoom * model.CanvasHeight)
-                OffsetY = model.OffsetY + (te.touches.[0.0].screenY - model.LastScreenY) / (model.Zoom * model.CanvasHeight)
-                LastScreenX = te.touches.[0.0].screenX
-                LastScreenY = te.touches.[0.0].screenY
+                Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientX)
             }, []
-        else
-            model, []
+        | 2.0 ->
+            let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
+            let dy = te.touches.[1.0].clientY - te.touches.[0.0].clientY
+            let distance = sqrt (dx * dx + dy * dy)
+            { model with
+                Transform = Pinching distance
+            }, []
+        | _ -> model, []
+    | TouchMoveMsg te ->
+        match model.Transform, te.touches.length with
+        | Scrolling (lastScreenX, lastScreenY), 1.0 ->
+            { model with
+                OffsetX = model.OffsetX - (te.touches.[0.0].screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
+                OffsetY = model.OffsetY + (te.touches.[0.0].screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
+                Transform = Scrolling (te.touches.[0.0].screenX, te.touches.[0.0].screenY)
+            }, []
+        | Pinching lastDistance, 2.0 ->
+            let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
+            let dy = te.touches.[1.0].clientY - te.touches.[0.0].clientY
+            let distance = sqrt (dx * dx + dy * dy)
+            { model with
+                Zoom = model.Zoom * 0.99 ** (distance - lastDistance)
+                Transform = Pinching distance
+            }, []
+        | _ -> model, []
     | RenderMsg ->
         match model.Render with
         | None ->
