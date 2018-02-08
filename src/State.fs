@@ -56,7 +56,7 @@ let update msg model =
         match te.touches.length with
         | 1.0 ->
             { model with
-                Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientX)
+                Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientY)
             }, []
         | 2.0 ->
             let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
@@ -79,7 +79,7 @@ let update msg model =
             let dy = te.touches.[1.0].clientY - te.touches.[0.0].clientY
             let distance = sqrt (dx * dx + dy * dy)
             { model with
-                Zoom = model.Zoom * 0.99 ** (distance - lastDistance)
+                Zoom = model.Zoom * 0.99 ** (lastDistance - distance)
                 Transform = Pinching distance
             }, []
         | _ -> model, []
