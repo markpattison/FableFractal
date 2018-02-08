@@ -21,15 +21,15 @@ let root model dispatch =
         p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
         div [
             Id "Fractal"
-            OnWheel (fun e -> (WheelMsg e) |> dispatch)
-            OnMouseDown (fun e -> (MouseDownMsg e) |> dispatch)
-            OnMouseUp (fun e -> (MouseUpMsg e) |> dispatch)
-            OnMouseMove (fun e -> (MouseMoveMsg e) |> dispatch)
-            OnMouseLeave (fun e -> (MouseLeaveMsg e) |> dispatch)
-            OnTouchStart (fun e -> (TouchStartMsg e) |> dispatch)
-            OnTouchMove (fun e -> (TouchMoveMsg e) |> dispatch)
-            OnTouchEnd (fun e -> (TouchEndMsg e) |> dispatch)
-            OnTouchCancel (fun e -> (TouchEndMsg e) |> dispatch)
+            OnWheel (fun e -> (WheelMsg e) |> dispatch; e.preventDefault())
+            OnMouseDown (fun e -> (MouseDownMsg e) |> dispatch; e.preventDefault())
+            OnMouseUp (fun e -> (MouseUpMsg e) |> dispatch; e.preventDefault())
+            OnMouseMove (fun e -> (MouseMoveMsg e) |> dispatch; e.preventDefault())
+            OnMouseLeave (fun e -> (MouseLeaveMsg e) |> dispatch; e.preventDefault())
+            OnTouchStart (fun e -> (TouchStartMsg e) |> dispatch; e.preventDefault())
+            OnTouchMove (fun e -> (TouchMoveMsg e) |> dispatch; e.preventDefault())
+            OnTouchEnd (fun e -> (TouchEndMsg e) |> dispatch; e.preventDefault())
+            OnTouchCancel (fun e -> (TouchEndMsg e) |> dispatch; e.preventDefault())
         ] []
     ]
 
