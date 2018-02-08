@@ -8,6 +8,9 @@ type Msg =
     | MouseUpMsg of React.MouseEvent
     | MouseMoveMsg of React.MouseEvent
     | MouseLeaveMsg of React.MouseEvent
+    | TouchStartMsg of React.TouchEvent
+    | TouchEndMsg of React.TouchEvent
+    | TouchMoveMsg of React.TouchEvent
     | RenderMsg
 
 type Model =

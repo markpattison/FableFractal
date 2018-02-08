@@ -46,7 +46,7 @@ let update msg model =
             LastScreenX = me.screenX
             LastScreenY = me.screenY
         }, []
-    | MouseUpMsg _ | MouseLeaveMsg _ -> { model with Scrolling = false }, []
+    | MouseUpMsg _ | MouseLeaveMsg _ | TouchEndMsg _ -> { model with Scrolling = false }, []
     | MouseMoveMsg me ->
         if model.Scrolling then
             { model with
@@ -54,6 +54,22 @@ let update msg model =
                 OffsetY = model.OffsetY + (me.screenY - model.LastScreenY) / (model.Zoom * model.CanvasHeight)
                 LastScreenX = me.screenX
                 LastScreenY = me.screenY
+            }, []
+        else
+            model, []
+    | TouchStartMsg te ->
+        { model with
+            Scrolling = true
+            LastScreenX = te.touches.[0.0].clientX
+            LastScreenY = te.touches.[0.0].clientY
+        }, []
+    | TouchMoveMsg te ->
+        if model.Scrolling then
+            { model with
+                OffsetX = model.OffsetX - (te.touches.[0.0].screenX - model.LastScreenX) / (model.Zoom * model.CanvasHeight)
+                OffsetY = model.OffsetY + (te.touches.[0.0].screenY - model.LastScreenY) / (model.Zoom * model.CanvasHeight)
+                LastScreenX = te.touches.[0.0].screenX
+                LastScreenY = te.touches.[0.0].screenY
             }, []
         else
             model, []

@@ -21,19 +21,21 @@ let root model dispatch =
         p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
         div [
             Id "Fractal"
-            OnWheel (fun we -> (WheelMsg we) |> dispatch)
-            OnMouseDown (fun me -> (MouseDownMsg me) |> dispatch)
-            OnMouseUp (fun me -> (MouseUpMsg me) |> dispatch)
-            OnMouseMove (fun me -> (MouseMoveMsg me) |> dispatch)
-            OnMouseLeave (fun me -> (MouseLeaveMsg me) |> dispatch)
+            OnWheel (fun e -> (WheelMsg e) |> dispatch)
+            OnMouseDown (fun e -> (MouseDownMsg e) |> dispatch)
+            OnMouseUp (fun e -> (MouseUpMsg e) |> dispatch)
+            OnMouseMove (fun e -> (MouseMoveMsg e) |> dispatch)
+            OnMouseLeave (fun e -> (MouseLeaveMsg e) |> dispatch)
+            OnTouchStart (fun e -> (TouchStartMsg e) |> dispatch)
+            OnTouchMove (fun e -> (TouchMoveMsg e) |> dispatch)
+            OnTouchEnd (fun e -> (TouchEndMsg e) |> dispatch)
+            OnTouchCancel (fun e -> (TouchEndMsg e) |> dispatch)
         ] []
     ]
 
 open Elmish.React
 open Elmish.Debug
 open Elmish.HMR
-
-//let renderer = FractalRenderer.create (Browser.document.getElementById("Fractal"))
 
 Program.mkProgram init update root
 
