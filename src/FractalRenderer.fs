@@ -28,7 +28,8 @@ let myFragment = """
 
     uniform float uWidthOverHeight;
     uniform float uZoom;
-    uniform vec2 uOffset;
+    uniform vec2 uOffset, uJuliaSeed;
+    uniform bool uIsJulia;
 
     varying vec2 vTextureCoord;
 
@@ -96,7 +97,7 @@ let myFragment = """
     void main(void)
     {
         vec2 z = calculatePosition(vTextureCoord, uZoom, uWidthOverHeight, uOffset);
-        float result = pixelResult(z, z);
+        float result = pixelResult(z, uIsJulia ? uJuliaSeed : z);
         gl_FragColor = applyColourMap(result);
     }
 """
@@ -143,8 +144,10 @@ let create (holder : Browser.Element) =
     let widthOverHeightUniform = createUniformLocation context program "uWidthOverHeight"
     let zoomUniform = createUniformLocation context program "uZoom"
     let offsetUniform = createUniformLocation context program "uOffset"
+    let juliaSeedUniform = createUniformLocation context program "uJuliaSeed"
+    let isJuliaUniform = createUniformLocation context program "uIsJulia"
 
-    let draw widthOverHeight zoom x y =
+    let draw widthOverHeight zoom x y jx jy isJulia =
         context.useProgram(program)
 
         context.bindBuffer(context.ARRAY_BUFFER, positionBuffer)
@@ -155,6 +158,8 @@ let create (holder : Browser.Element) =
         context.uniform1f(widthOverHeightUniform, widthOverHeight)
         context.uniform1f(zoomUniform, zoom)
         context.uniform2f(offsetUniform, x, y)
+        context.uniform2f(juliaSeedUniform, jx, jy)
+        context.uniform1i(isJuliaUniform, if isJulia then 1.0 else 0.0)
 
         context.drawArrays (context.TRIANGLE_STRIP, 0., 4.0)
 
@@ -176,7 +181,11 @@ let create (holder : Browser.Element) =
             let widthOverHeight = if canvas.height = 0.0 then 1.0 else canvas.width / canvas.height
             clear resolution
 
-            draw widthOverHeight model.Zoom model.OffsetX model.OffsetY
+            match model.FractalType with
+            | Mandelbrot ->
+                draw widthOverHeight model.Zoom model.MandelbrotX model.MandelbrotY 0.0 0.0 false
+            | Julia ->
+                draw widthOverHeight model.Zoom model.JuliaX model.JuliaY model.MandelbrotX model.MandelbrotY true
 
         | _ -> ignore()
     

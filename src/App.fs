@@ -14,11 +14,30 @@ importAll "./sass/main.sass"
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 
+let showParams model =
+        if model.FractalType = Julia then [
+            p [] [ sprintf "X = %.6f" model.JuliaX |> str ]
+            p [] [ sprintf "Y = %.6f" model.JuliaY |> str ]
+            p [] [ sprintf "Seed X = %.6f" model.MandelbrotX |> str ]
+            p [] [ sprintf "Seed Y = %.6f" model.MandelbrotY |> str ]
+            ]
+        else [
+            p [] [ sprintf "X = %.6f" model.MandelbrotX |> str ]
+            p [] [ sprintf "Y = %.6f" model.MandelbrotY |> str ]
+            ]
+
 let root model dispatch =
     div [] [
-        p [] [ sprintf "X = %.6f" model.OffsetX |> str ]
-        p [] [ sprintf "Y = %.6f" model.OffsetY |> str ]
-        p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
+        div [] (showParams model)
+        button [
+            (if model.FractalType = Mandelbrot then ClassName "button is-active" else ClassName "button")
+            OnClick (fun _ -> MandelbrotClick |> dispatch)
+        ] [ str "Mandelbrot" ]
+        button [
+            ClassName "button"
+            (if model.FractalType = Julia then ClassName "button is-active" else ClassName "button")
+            OnClick (fun _ -> JuliaClick |> dispatch)
+        ] [ str "Julia" ]
         div [
             Id "Fractal"
             OnWheel (fun e -> (WheelMsg e) |> dispatch; e.preventDefault())
@@ -30,6 +49,7 @@ let root model dispatch =
             OnTouchMove (fun e -> (TouchMoveMsg e) |> dispatch; e.preventDefault())
             OnTouchEnd (fun e -> (TouchEndMsg e) |> dispatch; e.preventDefault())
             OnTouchCancel (fun e -> (TouchEndMsg e) |> dispatch; e.preventDefault())
+            OnContextMenu (fun e -> e.preventDefault())
         ] []
     ]
 

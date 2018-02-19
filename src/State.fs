@@ -26,8 +26,11 @@ let init result =
     {
         CanvasHeight = 1.0
         Zoom = 0.314
-        OffsetX = -0.5
-        OffsetY = 0.0
+        FractalType = Mandelbrot
+        MandelbrotX = -0.5
+        MandelbrotY = 0.0
+        JuliaX = 0.0
+        JuliaY = 0.0
         Now = System.DateTime.Now
         Render = None
         Transform = NoTransform
@@ -35,28 +38,38 @@ let init result =
 
 let update msg model =
     match msg with
+    | MandelbrotClick ->
+        { model with FractalType = Mandelbrot }, []
+    | JuliaClick ->
+        { model with FractalType = Julia }, []
     | WheelMsg we ->
         let zoom = (normalizeWheel we).pixelY / 100.0
         { model with Zoom = model.Zoom * 0.99 ** zoom }, []
     | MouseDownMsg me ->
         { model with
-            Transform = Scrolling (me.screenX, me.screenY)
+            Transform = Scrolling (me.screenX, me.screenY, if me.button = 0.0 then Left else Right)
         }, []
     | MouseUpMsg _ | MouseLeaveMsg _ | TouchEndMsg _ -> { model with Transform = NoTransform }, []
     | MouseMoveMsg me ->
-        match model.Transform with
-        | Scrolling (lastScreenX, lastScreenY) ->
+        match model.Transform, model.FractalType with
+        | Scrolling (lastScreenX, lastScreenY, Left), Julia ->
             { model with
-                OffsetX = model.OffsetX - (me.screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
-                OffsetY = model.OffsetY + (me.screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
-                Transform = Scrolling (me.screenX, me.screenY)
+                JuliaX = model.JuliaX - (me.screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
+                JuliaY = model.JuliaY + (me.screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
+                Transform = Scrolling (me.screenX, me.screenY, Left)
+            }, []
+        | Scrolling (lastScreenX, lastScreenY, scr), _ ->
+            { model with
+                MandelbrotX = model.MandelbrotX - (me.screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
+                MandelbrotY = model.MandelbrotY + (me.screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
+                Transform = Scrolling (me.screenX, me.screenY, scr)
             }, []
         | _ -> model, []
     | TouchStartMsg te ->
         match te.touches.length with
         | 1.0 ->
             { model with
-                Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientY)
+                Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientY, Left)
             }, []
         | 2.0 ->
             let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
@@ -68,11 +81,11 @@ let update msg model =
         | _ -> model, []
     | TouchMoveMsg te ->
         match model.Transform, te.touches.length with
-        | Scrolling (lastScreenX, lastScreenY), 1.0 ->
+        | Scrolling (lastScreenX, lastScreenY, _), 1.0 ->
             { model with
-                OffsetX = model.OffsetX - (te.touches.[0.0].screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
-                OffsetY = model.OffsetY + (te.touches.[0.0].screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
-                Transform = Scrolling (te.touches.[0.0].screenX, te.touches.[0.0].screenY)
+                MandelbrotX = model.MandelbrotX - (te.touches.[0.0].screenX - lastScreenX) / (model.Zoom * model.CanvasHeight)
+                MandelbrotY = model.MandelbrotY + (te.touches.[0.0].screenY - lastScreenY) / (model.Zoom * model.CanvasHeight)
+                Transform = Scrolling (te.touches.[0.0].screenX, te.touches.[0.0].screenY, Left)
             }, []
         | Pinching lastDistance, 2.0 ->
             let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
