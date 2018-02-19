@@ -125,6 +125,9 @@ let update msg model =
     | Julia (_, Move), TouchMoveMsg te when te.touches.length = 1.0 ->
         updateForMove te.touches.[0.0].screenX te.touches.[0.0].screenY model
     
+    | Julia (seed, ChangeSeed), TouchMoveMsg te when te.touches.length = 1.0 ->
+        updateForSeedChange seed te.touches.[0.0].screenX te.touches.[0.0].screenY model
+    
     | Mandelbrot, TouchMoveMsg te
     | Julia _, TouchMoveMsg te when te.touches.length = 2.0 ->
         match model.Transform with
