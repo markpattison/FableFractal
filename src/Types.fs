@@ -5,6 +5,8 @@ open Fable.Import
 type Msg =
     | MandelbrotClick
     | JuliaClick
+    | JuliaMoveClick
+    | JuliaChangeSeedClick
     | WheelMsg of React.WheelEvent
     | MouseDownMsg of React.MouseEvent
     | MouseUpMsg of React.MouseEvent
@@ -15,11 +17,12 @@ type Msg =
     | TouchMoveMsg of React.TouchEvent
     | RenderMsg
 
-type ScrollType = Left | Right
+type JuliaScrolling = Move | ChangeSeed
+
 type FractalType = Mandelbrot | Julia
 
 type Transform =
-    | Scrolling of float * float * ScrollType
+    | Scrolling of float * float
     | Pinching of float
     | NoTransform
 
@@ -28,6 +31,7 @@ type Model =
         CanvasHeight: float
         Zoom: float
         FractalType: FractalType
+        JuliaScrolling: JuliaScrolling
         MandelbrotX: float
         MandelbrotY: float
         JuliaX: float
