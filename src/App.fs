@@ -16,17 +16,19 @@ open Fable.Helpers.React.Props
 
 let showParams model =
     match model.FractalType with
-    | Julia ->
+    | Julia (seed, _) ->
         [
-            p [] [ sprintf "X = %.6f" model.JuliaX |> str ]
-            p [] [ sprintf "Y = %.6f" model.JuliaY |> str ]
-            p [] [ sprintf "Seed X = %.6f" model.MandelbrotX |> str ]
-            p [] [ sprintf "Seed Y = %.6f" model.MandelbrotY |> str ]
+            p [] [ sprintf "X = %.6f" model.X |> str ]
+            p [] [ sprintf "Y = %.6f" model.Y |> str ]
+            p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
+            p [] [ sprintf "Seed X = %.6f" seed.SeedX |> str ]
+            p [] [ sprintf "Seed Y = %.6f" seed.SeedY |> str ]
         ]
     | Mandelbrot ->
         [
-            p [] [ sprintf "X = %.6f" model.MandelbrotX |> str ]
-            p [] [ sprintf "Y = %.6f" model.MandelbrotY |> str ]
+            p [] [ sprintf "X = %.6f" model.X |> str ]
+            p [] [ sprintf "Y = %.6f" model.Y |> str ]
+            p [] [ sprintf "Zoom = %.6f" model.Zoom |> str ]
         ]
 
 let showButtons model dispatch =
@@ -35,34 +37,32 @@ let showButtons model dispatch =
             button [
                 (match model.FractalType with
                     | Mandelbrot -> ClassName "button is-primary is-selected"
-                    | Julia -> ClassName "button")
+                    | Julia _ -> ClassName "button")
                 OnClick (fun _ -> MandelbrotClick |> dispatch)
             ] [ str "Mandelbrot" ]
             button [
                 (match model.FractalType with
                     | Mandelbrot -> ClassName "button"
-                    | Julia -> ClassName "button is-primary is-selected")
+                    | Julia _ -> ClassName "button is-primary is-selected")
                 OnClick (fun _ -> JuliaClick |> dispatch)
             ] [ str "Julia" ]
         ]
         div [] [
-            if model.FractalType = Julia then
-                yield! [
-                    button [
-                        (match model.FractalType, model.JuliaScrolling with
-                            | Julia, Move -> ClassName "button is-primary is-selected"
-                            | Julia, ChangeSeed -> ClassName "button"
-                            | Mandelbrot, _ -> ClassName "button is-disabled")
-                        OnClick (fun _ -> JuliaMoveClick |> dispatch)
-                        ] [ str "Move" ]
-                    button [
-                        (match model.FractalType, model.JuliaScrolling with
-                            | Julia, Move -> ClassName "button"
-                            | Julia, ChangeSeed -> ClassName "button is-primary is-selected"
-                            | Mandelbrot, _ -> ClassName "button is-disabled")
-                        OnClick (fun _ -> JuliaChangeSeedClick |> dispatch)
+            match model.FractalType with
+            | Julia (_, scrollType) ->
+                yield button [
+                    (match scrollType with
+                        | Move -> ClassName "button is-primary is-selected"
+                        | ChangeSeed -> ClassName "button")
+                    OnClick (fun _ -> JuliaMoveClick |> dispatch)
+                ] [ str "Move" ]
+                yield button [
+                    (match scrollType with
+                        | Move -> ClassName "button"
+                        | ChangeSeed -> ClassName "button is-primary is-selected")
+                    OnClick (fun _ -> JuliaChangeSeedClick |> dispatch)
                 ] [ str "ChangeSeed" ]
-            ]
+            | _ -> ()
         ]
     ]
 

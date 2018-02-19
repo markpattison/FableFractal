@@ -17,9 +17,12 @@ type Msg =
     | TouchMoveMsg of React.TouchEvent
     | RenderMsg
 
+type JuliaSeed = { SeedX: float; SeedY: float }
 type JuliaScrolling = Move | ChangeSeed
 
-type FractalType = Mandelbrot | Julia
+type FractalType =
+    | Mandelbrot
+    | Julia of JuliaSeed * JuliaScrolling
 
 type Transform =
     | Scrolling of float * float
@@ -31,11 +34,8 @@ type Model =
         CanvasHeight: float
         Zoom: float
         FractalType: FractalType
-        JuliaScrolling: JuliaScrolling
-        MandelbrotX: float
-        MandelbrotY: float
-        JuliaX: float
-        JuliaY: float
+        X: float
+        Y: float
         Now: System.DateTime
         Render: (Model -> unit) option
         Transform: Transform

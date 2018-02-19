@@ -6,6 +6,7 @@ open Fable.Core.JsInterop
 open WebGLHelper
 open App.Types
 open Fable.Core
+open Fable.PowerPack.Keyboard
 
 let myVertex = """
     precision highp float;
@@ -183,9 +184,9 @@ let create (holder : Browser.Element) =
 
             match model.FractalType with
             | Mandelbrot ->
-                draw widthOverHeight model.Zoom model.MandelbrotX model.MandelbrotY 0.0 0.0 false
-            | Julia ->
-                draw widthOverHeight model.Zoom model.JuliaX model.JuliaY model.MandelbrotX model.MandelbrotY true
+                draw widthOverHeight model.Zoom model.X model.Y 0.0 0.0 false
+            | Julia ({ SeedX = seedX; SeedY = seedY }, _) ->
+                draw widthOverHeight model.Zoom model.X model.Y seedX seedY true
 
         | _ -> ignore()
     
