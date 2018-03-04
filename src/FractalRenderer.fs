@@ -44,24 +44,44 @@ let myFragment = """
         return vec4(sin(x * 4.0), sin (x * 5.0), sin (x * 6.0), 1.0);
     }
 
-    vec2 complexMultiply(vec2 a, vec2 b)
+    vec2 cConj(vec2 z)
+    {
+        return vec2(z.x, -z.y);
+    }
+
+    vec2 cMul(vec2 a, vec2 b)
     {
         return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
     }
 
-    vec2 complexSquare(vec2 z)
+    vec2 cSq(vec2 z)
     {
-        return complexMultiply(z, z);
+        return cMul(z, z);
     }
 
-    vec2 complexCube(vec2 z)
+    vec2 cCube(vec2 z)
     {
-        return complexMultiply(z, complexSquare(z));
+        return cMul(z, cMul(z, z));
+    }
+
+    vec2 cPow4(vec2 z)
+    {
+        return cSq(cSq(z));
+    }
+
+    vec2 cDiv(vec2 a, vec2 b)
+    {
+        return cMul(a, cConj(b));
+    }
+
+    vec2 cRecip(vec2 z)
+    {
+        return cDiv(vec2(1.0, 0.0), z);
     }
 
     vec2 f(vec2 z, vec2 offset)
     {
-        return complexSquare(z) + offset;
+        return cSq(z) + offset;
     }
 
     float pixelResult(vec2 z, vec2 offset)
