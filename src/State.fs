@@ -18,8 +18,7 @@ let normalizeWheel : React.WheelEvent -> INormalizedWheel = importDefault "norma
 
 let renderCommand =
     let sub dispatch =
-        let f = Browser.FrameRequestCallback (fun _ -> dispatch RenderMsg)
-        Browser.window.requestAnimationFrame(f) |> ignore
+        Browser.window.requestAnimationFrame(fun _ -> dispatch RenderMsg) |> ignore
     Cmd.ofSub sub
 
 let initMandelbrot =
