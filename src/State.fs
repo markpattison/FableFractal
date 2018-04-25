@@ -49,6 +49,7 @@ let init result =
     Browser.document.addEventListener("gesturestart", !^(fun e -> e.preventDefault()), true)
     Browser.document.addEventListener("gesturechange", !^(fun e -> e.preventDefault()), true)
     Browser.document.addEventListener("gestureend", !^(fun e -> e.preventDefault()), true)
+    Browser.document.addEventListener_scroll(fun e -> e.preventDefault())
     initMandelbrot, renderCommand
 
 let updateForMove x y model =
