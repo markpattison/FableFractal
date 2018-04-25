@@ -76,14 +76,14 @@ let fractalCanvas dispatch =
     div [
         Id "Fractal"
         OnWheel (fun e -> e.preventDefault(); (WheelMsg e) |> dispatch)
-        OnMouseDown (fun e -> e.preventDefault();(MouseDownMsg e) |> dispatch)
-        OnMouseUp (fun e -> e.preventDefault();(MouseUpMsg e) |> dispatch)
-        OnMouseMove (fun e -> e.preventDefault();(MouseMoveMsg e) |> dispatch)
-        OnMouseLeave (fun e -> e.preventDefault();(MouseLeaveMsg e) |> dispatch)
-        OnTouchStart (fun e -> e.preventDefault();(TouchStartMsg e) |> dispatch)
-        OnTouchMove (fun e -> e.preventDefault();(TouchMoveMsg e) |> dispatch)
-        OnTouchEnd (fun e -> e.preventDefault();(TouchEndMsg e) |> dispatch)
-        OnTouchCancel (fun e -> e.preventDefault();(TouchEndMsg e) |> dispatch)
+        OnMouseDown (fun e -> e.preventDefault(); (MouseDownMsg e) |> dispatch)
+        OnMouseUp (fun e -> e.preventDefault(); (MouseUpMsg e) |> dispatch)
+        OnMouseMove (fun e -> e.preventDefault(); (MouseMoveMsg e) |> dispatch)
+        OnMouseLeave (fun e -> e.preventDefault(); (MouseLeaveMsg e) |> dispatch)
+        OnTouchStart (fun e -> e.preventDefault(); (TouchStartMsg e) |> dispatch)
+        OnTouchMove (fun e -> e.preventDefault(); (TouchMoveMsg e) |> dispatch)
+        OnTouchEnd (fun e -> e.preventDefault(); (TouchEndMsg e) |> dispatch)
+        OnTouchCancel (fun e -> e.preventDefault(); (TouchEndMsg e) |> dispatch)
     ] []
 
 let root model dispatch =
