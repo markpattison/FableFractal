@@ -46,7 +46,9 @@ let initJulia =
     }
 
 let init result =
-    Browser.document.addEventListener_MSGestureStart(fun e -> e.preventDefault())
+    Browser.document.addEventListener("gesturestart", !^(fun e -> e.preventDefault()), true)
+    Browser.document.addEventListener("gesturechange", !^(fun e -> e.preventDefault()), true)
+    Browser.document.addEventListener("gestureend", !^(fun e -> e.preventDefault()), true)
     initMandelbrot, renderCommand
 
 let updateForMove x y model =
