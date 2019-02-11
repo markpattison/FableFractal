@@ -6,7 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "fsevents": "^1.2.7",
     "normalize-wheel": "^1.0.1"
   },
   "devDependencies": {
