@@ -14,6 +14,8 @@ importAll "./sass/main.sass"
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 
+open Elmish.HMR
+
 let showParams model =
     match model.FractalType with
     | Julia (seed, _) ->
@@ -100,7 +102,6 @@ Program.mkProgram init update root
 
 #if DEBUG
 //|> Program.withDebugger
-|> Program.withHMR
 #endif
 |> Program.withReact "FableFractal"
 |> Program.run
