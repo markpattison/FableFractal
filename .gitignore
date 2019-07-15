@@ -206,3 +206,6 @@ paket-files/
 .idea/
 *.sln.iml
 /src/public/bundle.js
+
+# Ionide
+.ionide/
