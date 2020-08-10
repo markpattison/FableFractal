@@ -15,7 +15,7 @@ group Build
 
     storage: none
 
-    nuget FSharp.Core 4.3.4
+    nuget FSharp.Core
     nuget Fake.Core.Target
     nuget Fake.DotNet.Cli
     nuget Fake.JavaScript.Npm
