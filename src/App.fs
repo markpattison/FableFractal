@@ -1,18 +1,14 @@
 module App.View
 
 open Elmish
-open Elmish.Browser.Navigation
-open Elmish.Browser.UrlParser
-open Fable.Core
 open Fable.Core.JsInterop
-open Fable.Import
 open App.Types
 open App.State
 
 importAll "./sass/main.sass"
 
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 
 open Elmish.HMR
 
@@ -103,7 +99,7 @@ Program.mkProgram init update root
 #if DEBUG
 //|> Program.withDebugger
 #endif
-|> Program.withReact "FableFractal"
+|> Program.withReactBatched "FableFractal"
 |> Program.run
 
 

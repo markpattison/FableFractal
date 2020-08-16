@@ -1,20 +1,20 @@
 module App.Types
 
-open Fable.Import
+open Browser.Types
 
 type Msg =
     | MandelbrotClick
     | JuliaClick
     | JuliaMoveClick
     | JuliaChangeSeedClick
-    | WheelMsg of React.WheelEvent
-    | MouseDownMsg of React.MouseEvent
-    | MouseUpMsg of React.MouseEvent
-    | MouseMoveMsg of React.MouseEvent
-    | MouseLeaveMsg of React.MouseEvent
-    | TouchStartMsg of React.TouchEvent
-    | TouchEndMsg of React.TouchEvent
-    | TouchMoveMsg of React.TouchEvent
+    | WheelMsg of WheelEvent
+    | MouseDownMsg of MouseEvent
+    | MouseUpMsg of MouseEvent
+    | MouseMoveMsg of MouseEvent
+    | MouseLeaveMsg of MouseEvent
+    | TouchStartMsg of TouchEvent
+    | TouchEndMsg of TouchEvent
+    | TouchMoveMsg of TouchEvent
     | RenderMsg
 
 type JuliaSeed = { SeedX: float; SeedY: float }

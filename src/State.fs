@@ -1,11 +1,9 @@
 module App.State
 
+open Browser
+open Browser.Types
 open Elmish
-open Elmish.Browser.Navigation
-open Elmish.Browser.UrlParser
-open Fable.Core
 open Fable.Core.JsInterop
-open Fable.Import
 open Types
 
 type INormalizedWheel =
@@ -14,11 +12,11 @@ type INormalizedWheel =
     abstract member spinX: float
     abstract member spinY: float
 
-let normalizeWheel : React.WheelEvent -> INormalizedWheel = importDefault "normalize-wheel"
+let normalizeWheel : WheelEvent -> INormalizedWheel = importDefault "normalize-wheel"
 
 let renderCommand =
     let sub dispatch =
-        Browser.window.requestAnimationFrame(fun _ -> dispatch RenderMsg) |> ignore
+        window.requestAnimationFrame(fun _ -> dispatch RenderMsg) |> ignore
     Cmd.ofSub sub
 
 let initMandelbrot =
@@ -46,10 +44,10 @@ let initJulia =
     }
 
 let init result =
-    Browser.document.addEventListener("gesturestart", !^(fun e -> e.preventDefault()), true)
-    Browser.document.addEventListener("gesturechange", !^(fun e -> e.preventDefault()), true)
-    Browser.document.addEventListener("gestureend", !^(fun e -> e.preventDefault()), true)
-    Browser.document.addEventListener_scroll(fun e -> e.preventDefault())
+    document.addEventListener("gesturestart", (fun e -> e.preventDefault()), true)
+    document.addEventListener("gesturechange", (fun e -> e.preventDefault()), true)
+    document.addEventListener("gestureend", (fun e -> e.preventDefault()), true)
+    document.addEventListener("scroll", (fun e -> e.preventDefault()), true)
     initMandelbrot, renderCommand
 
 let updateForMove x y model =
@@ -111,32 +109,32 @@ let update msg model =
     | Julia (seed, ChangeSeed), MouseMoveMsg me ->
         updateForSeedChange seed me.screenX me.screenY model
     
-    | _, TouchStartMsg te when te.touches.length = 1.0 ->
+    | _, TouchStartMsg te when te.touches.Length = 1 ->
         { model with
-            Transform = Scrolling (te.touches.[0.0].clientX, te.touches.[0.0].clientY)
+            Transform = Scrolling (te.touches.[0].clientX, te.touches.[0].clientY)
         }, []
     
-    | _, TouchStartMsg te when te.touches.length = 2.0 ->
-        let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
-        let dy = te.touches.[1.0].clientY - te.touches.[0.0].clientY
+    | _, TouchStartMsg te when te.touches.Length = 2 ->
+        let dx = te.touches.[1].clientX - te.touches.[0].clientX
+        let dy = te.touches.[1].clientY - te.touches.[0].clientY
         let distance = sqrt (dx * dx + dy * dy)
         { model with
             Transform = Pinching distance
         }, []
     
     | Mandelbrot, TouchMoveMsg te
-    | Julia (_, Move), TouchMoveMsg te when te.touches.length = 1.0 ->
-        updateForMove te.touches.[0.0].screenX te.touches.[0.0].screenY model
+    | Julia (_, Move), TouchMoveMsg te when te.touches.Length = 1 ->
+        updateForMove te.touches.[0].screenX te.touches.[0].screenY model
     
-    | Julia (seed, ChangeSeed), TouchMoveMsg te when te.touches.length = 1.0 ->
-        updateForSeedChange seed te.touches.[0.0].screenX te.touches.[0.0].screenY model
+    | Julia (seed, ChangeSeed), TouchMoveMsg te when te.touches.Length = 1 ->
+        updateForSeedChange seed te.touches.[0].screenX te.touches.[0].screenY model
     
     | Mandelbrot, TouchMoveMsg te
-    | Julia _, TouchMoveMsg te when te.touches.length = 2.0 ->
+    | Julia _, TouchMoveMsg te when te.touches.Length = 2 ->
         match model.Transform with
         | Pinching lastDistance ->
-            let dx = te.touches.[1.0].clientX - te.touches.[0.0].clientX
-            let dy = te.touches.[1.0].clientY - te.touches.[0.0].clientY
+            let dx = te.touches.[1].clientX - te.touches.[0].clientX
+            let dy = te.touches.[1].clientY - te.touches.[0].clientY
             let distance = sqrt (dx * dx + dy * dy)
             { model with
                 Zoom = model.Zoom * 0.99 ** (lastDistance - distance)
@@ -147,7 +145,7 @@ let update msg model =
     | _, RenderMsg ->
         match model.Render with
         | None ->
-            let holder = Browser.document.getElementById("Fractal")
+            let holder = document.getElementById("Fractal")
             match holder with
             | null -> model, renderCommand
             | h ->

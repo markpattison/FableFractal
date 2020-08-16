@@ -1,14 +1,14 @@
 module WebGLHelper
 
+open Browser.Types
 open Fable.Core.JsInterop
-open Fable.Import
 
 // Shorthand
-type GL = Browser.WebGLRenderingContext
+type GL = WebGLRenderingContext
 
-let getWebGLContext (canvas: Browser.HTMLCanvasElement) = 
+let getWebGLContext (canvas: HTMLCanvasElement) = 
     let getContext ctxString =
-        canvas.getContext(ctxString, createObj [ "premultipliedAlpha" ==> false ]) |> unbox<Browser.WebGLRenderingContext>
+        canvas.getContext(ctxString, createObj [ "premultipliedAlpha" ==> false ]) |> unbox<WebGLRenderingContext>
 
     let webgl = getContext "webgl"
   
@@ -49,7 +49,7 @@ let createBuffer (items : float[]) (gl:GL) =
     let buffer = gl.createBuffer()
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-    gl.bufferData(gl.ARRAY_BUFFER, (createNew JS.Float32Array items) |> unbox, gl.STATIC_DRAW)
+    gl.bufferData(gl.ARRAY_BUFFER, (createNew Fable.Core.JS.Constructors.Float32Array items) |> unbox, gl.STATIC_DRAW)
 
     buffer
 

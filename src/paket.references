@@ -4,3 +4,5 @@ Fable.Elmish.React
 Fable.Elmish.Browser
 Fable.Elmish.Debugger
 Fable.Elmish.HMR
+Fable.Browser.Dom
+Fable.Browser.WebGL

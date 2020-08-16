@@ -1,12 +1,10 @@
 module FractalRenderer
 
 open System
-open Fable.Import
-open Fable.Core.JsInterop
+open Browser
+open Browser.Types
 open WebGLHelper
 open App.Types
-open Fable.Core
-open Fable.PowerPack.Keyboard
 
 let myVertex = """
     precision highp float;
@@ -142,16 +140,14 @@ let initBuffers gl =
             |] gl
     positions, textureCoords
 
-let create (holder : Browser.Element) =
+let create (holder : Element) =
 
-    let canvas = Browser.document.createElement_canvas()
+    let canvas = document.createElement "canvas" :?> HTMLCanvasElement
     let width = 640
     let height = 480
 
     canvas.width <- float width
     canvas.height <- float height
-    canvas.style.width <- width.ToString() + "px"
-    canvas.style.height <- height.ToString() + "px"
 
     holder.appendChild(canvas) |> ignore
 
@@ -188,7 +184,7 @@ let create (holder : Browser.Element) =
 
     // Try not to use "context" after this point, bind a function above.
 
-    let imageLoadCanvas = Browser.document.createElement_canvas()
+    let imageLoadCanvas = document.createElement "canvas" :?> HTMLCanvasElement
     let imageLoadCanvasContext = imageLoadCanvas.getContext_2d()
 
     let mutable last = DateTime.Now
