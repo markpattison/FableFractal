@@ -1,2 +1,2 @@
-dotnet tool install fake-cli -g
-fake build %*
+dotnet tool restore
+dotnet fake build %*
