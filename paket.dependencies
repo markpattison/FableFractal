@@ -10,7 +10,7 @@ nuget Fable.Elmish.React
 nuget Fable.Elmish.Browser
 nuget Fable.Elmish.Debugger
 nuget Fable.Browser.Dom
-nuget Fable.Browser.WebGL prerelease
+nuget Fable.Browser.WebGL
 
 group Build
     source https://nuget.org/api/v2
