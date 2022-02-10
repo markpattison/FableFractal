@@ -20,7 +20,7 @@
     "fable-compiler": "^2.13.0",
     "fable-loader": "^2.1.9",
     "loglevel": "^1.7.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "remotedev": "^0.2.9",
